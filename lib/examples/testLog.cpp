@@ -1,5 +1,4 @@
 #include <log.h>
-//#include <thread>
 
 extern void waitForLogLvl(int app_num, int listenPort);
 

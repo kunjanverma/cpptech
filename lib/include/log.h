@@ -44,7 +44,7 @@ void waitForLogLvl(int app_num, int listenPort)
 	if(APP_INDEX_INVALID <= app_num)
 	{
 		std::lock_guard<std::mutex> lck (logMutex);
-    	std::cerr << __FILE__ << "[" << __LINE__ << "]" << " Error: Wrong App number"<<"\n";
+		std::cerr << __FILE__ << "[" << __LINE__ << "]" << " Error: Wrong App number"<<"\n";
 		return;
 	}
 
@@ -63,23 +63,23 @@ void waitForLogLvl(int app_num, int listenPort)
 	if( setsockopt(sockfd, SOL_SOCKET, (SO_REUSEPORT | SO_REUSEADDR),  &enable, sizeof(int)) < 0)
 	{
 		std::lock_guard<std::mutex> lck (logMutex);
-    	std::cerr << __FILE__ << "[" << __LINE__ << "]" << "setsockopt(SO_REUSEADDR) failed"<<errno<<"\n";
+		std::cerr << __FILE__ << "[" << __LINE__ << "]" << "setsockopt(SO_REUSEADDR) failed"<<errno<<"\n";
 		close(sockfd);
 		return;
 	}
 	memset( &saServer, 0, sizeof( saServer ) );
 	saServer.sin_family = AF_INET;
-    saServer.sin_port = htons( listenPort );
-    saServer.sin_addr.s_addr = htonl(INADDR_ANY);
-    //saServer.sin_addr.s_addr = inet_addr("127.0.0.1");
+	saServer.sin_port = htons( listenPort );
+	saServer.sin_addr.s_addr = htonl(INADDR_ANY);
+	//saServer.sin_addr.s_addr = inet_addr("127.0.0.1");
 	
 	if( ::bind( sockfd, (struct sockaddr*)&saServer, sizeof(saServer) ) < 0 )
-    {
+	{
 		std::lock_guard<std::mutex> lck (logMutex);
-        std::cerr << __FILE__ << "[" << __LINE__ << "]" << "Unable to bind socket\n";
+		std::cerr << __FILE__ << "[" << __LINE__ << "]" << "Unable to bind socket\n";
 		close(sockfd);
-        return;
-    }
+		return;
+	}
 	group.imr_multiaddr.s_addr = inet_addr("226.1.1.1");
 	group.imr_interface.s_addr = htonl(INADDR_ANY);
 	//group.imr_interface.s_addr = inet_addr("127.0.0.1");
@@ -109,7 +109,7 @@ void waitForLogLvl(int app_num, int listenPort)
 		if ( memcmp("0x", str_dbg_inp, 2) )
 		{
 			std::lock_guard<std::mutex> lck (logMutex);
-        	std::cerr << __FILE__ << "[" << __LINE__ << "]" << "wrong debug level string format\n";
+			std::cerr << __FILE__ << "[" << __LINE__ << "]" << "wrong debug level string format\n";
 			continue;
 		}
 
@@ -119,8 +119,8 @@ void waitForLogLvl(int app_num, int listenPort)
 		dbg_inp_ss >> std::hex >> dbg_inp_recv;
 
 		if ( !( (dbg_inp_recv>>LOG_LEVEL_NUM_BITS) & (1 << (app_num-1)) ) ) /*Check if app_num th bit is set for
-																		      dbg_inp_recv starting from 
-																		      LOG_LEVEL_NUM_BITS th bit*/
+																			  dbg_inp_recv starting from 
+																			  LOG_LEVEL_NUM_BITS th bit*/
 		{
 			continue; //The data received is not for this application
 		}
@@ -160,12 +160,12 @@ inline bool ixecuteLog( bool istrace, const char* mode, const char* file, int li
 #else   // stdout
 	if(istrace)    // add thread ID field to debug builds
 	{
-    	std::cout << timestr << " " << mode << " " << "{thread_id:" << std::this_thread::get_id() << "} " 
+		std::cout << timestr << " " << mode << " " << "{thread_id:" << std::this_thread::get_id() << "} " 
 				  << file << " [" << line << "] " << func << "(): " << cbuffer << std::endl;
 	}
 	else
 	{
-    	std::cout << timestr << " " << mode << " " << file << " [" << line << "] " << func << "(): " 
+		std::cout << timestr << " " << mode << " " << file << " [" << line << "] " << func << "(): " 
 				  << cbuffer << std::endl;
 	}
 #endif

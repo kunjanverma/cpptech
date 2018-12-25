@@ -146,16 +146,16 @@ void gettimestr(char *timestr)
 inline bool ixecuteLog( bool istrace, const char* mode, const char* file, int line, const char* func, const char* fmt, ...)
 {
 	std::lock_guard<std::mutex> lck (logMutex);
-    const int bufLen = 8196;
+	const int bufLen = 8196;
 	static char timestr[26];
 	gettimestr(timestr);
-    static char cbuffer[bufLen];
+	static char cbuffer[bufLen];
 	va_list argList;
 	va_start(argList, fmt);
-    vsnprintf( cbuffer, bufLen, fmt, argList );
-    va_end( argList );
+	vsnprintf( cbuffer, bufLen, fmt, argList );
+	va_end( argList );
 #ifdef LOG_TO_STDERR
-    std::cerr << timestr << " " << mode << " " << file << " [" << line << "] " << func << "(): " 
+	std::cerr << timestr << " " << mode << " " << file << " [" << line << "] " << func << "(): " 
 			  << cbuffer << std::endl;
 #else   // stdout
 	if(istrace)    // add thread ID field to debug builds
@@ -175,26 +175,26 @@ inline bool ixecuteLog( bool istrace, const char* mode, const char* file, int li
 #define TRACE(fmt, ...)	{									\
 		std::lock_guard<std::mutex> lck(dbg_lvl_mtx);		\
 		(debugLvl == LOG_TRACE) && 							\
-	    ixecuteLog( true, "TRC", __BASE_FILE__, __LINE__,__FUNCTION__,fmt, ##__VA_ARGS__); \
+		ixecuteLog( true, "TRC", __BASE_FILE__, __LINE__,__FUNCTION__,fmt, ##__VA_ARGS__); \
 }
 #define INFO(fmt, ...)	{									\
 		std::lock_guard<std::mutex> lck(dbg_lvl_mtx);		\
 		(debugLvl >= LOG_INFO) && 							\
-	    ixecuteLog( false, "INF", __BASE_FILE__, __LINE__,__FUNCTION__,fmt, ##__VA_ARGS__); \
+		ixecuteLog( false, "INF", __BASE_FILE__, __LINE__,__FUNCTION__,fmt, ##__VA_ARGS__); \
 }
 #define WARN(fmt, ...)	{									\
 		std::lock_guard<std::mutex> lck(dbg_lvl_mtx);		\
 		(debugLvl >= LOG_WARN) && 							\
-	    ixecuteLog( false, "WRN", __BASE_FILE__, __LINE__,__FUNCTION__,fmt, ##__VA_ARGS__); \
+		ixecuteLog( false, "WRN", __BASE_FILE__, __LINE__,__FUNCTION__,fmt, ##__VA_ARGS__); \
 }
 #define ERROR(fmt, ...)	{									\
 		std::lock_guard<std::mutex> lck(dbg_lvl_mtx);		\
 		(debugLvl >= LOG_ERROR) && 							\
-	    ixecuteLog( false, "ERR", __BASE_FILE__, __LINE__,__FUNCTION__,fmt, ##__VA_ARGS__); \
+		ixecuteLog( false, "ERR", __BASE_FILE__, __LINE__,__FUNCTION__,fmt, ##__VA_ARGS__); \
 }
 #define FATAL(fmt, ...)	{									\
 		std::lock_guard<std::mutex> lck(dbg_lvl_mtx);		\
 		(debugLvl >= LOG_FATAL) && 							\
-	    ixecuteLog( false, "FTL", __BASE_FILE__, __LINE__,__FUNCTION__,fmt, ##__VA_ARGS__); \
+		ixecuteLog( false, "FTL", __BASE_FILE__, __LINE__,__FUNCTION__,fmt, ##__VA_ARGS__); \
 }
 #endif

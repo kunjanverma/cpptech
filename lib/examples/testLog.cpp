@@ -1,14 +1,13 @@
 #include <log.h>
-#include <thread>
+//#include <thread>
 
-extern std::string APP_NAME;
-extern void waitForLogLvl(int listenPort);
+extern void waitForLogLvl(int app_num, int listenPort);
 
 #define NO_TRACE
 
-int main()
+int main(int argc, char *argv[])
 {
-	std::thread log_lvl_th(waitForLogLvl, 43555);
+	std::thread log_lvl_th(waitForLogLvl, atoi(argv[1]), atoi(argv[2]));
 
 	while(1)
 	{

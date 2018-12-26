@@ -71,7 +71,6 @@ void waitForLogLvl(int app_num, int listenPort)
 	saServer.sin_family = AF_INET;
 	saServer.sin_port = htons( listenPort );
 	saServer.sin_addr.s_addr = htonl(INADDR_ANY);
-	//saServer.sin_addr.s_addr = inet_addr("127.0.0.1");
 	
 	if( ::bind( sockfd, (struct sockaddr*)&saServer, sizeof(saServer) ) < 0 )
 	{
@@ -81,8 +80,7 @@ void waitForLogLvl(int app_num, int listenPort)
 		return;
 	}
 	group.imr_multiaddr.s_addr = inet_addr("226.1.1.1");
-	group.imr_interface.s_addr = htonl(INADDR_ANY);
-	//group.imr_interface.s_addr = inet_addr("127.0.0.1");
+	group.imr_interface.s_addr = inet_addr("127.0.0.1");
 	if(setsockopt(sockfd, IPPROTO_IP, IP_ADD_MEMBERSHIP, (char *)&group, sizeof(group)) < 0)
 	{
 			std::cerr << __FILE__ << "[" << __LINE__ << "]" << "Adding multicast group error\n";
@@ -90,13 +88,13 @@ void waitForLogLvl(int app_num, int listenPort)
 			return;
 	}
 
-	/*unsigned char do_enable = (unsigned char) enable;
+	unsigned char do_enable = (unsigned char) enable;
 	if(setsockopt(sockfd, IPPROTO_IP, IP_MULTICAST_LOOP, &do_enable, sizeof(do_enable)) < 0)
 	{
 			std::cerr << __FILE__ << "[" << __LINE__ << "]" << "Enabling multicast loop failed\n";
 			close(sockfd);
 			return;
-	}*/
+	}
 	
 	while(true)
 	{
@@ -105,6 +103,7 @@ void waitForLogLvl(int app_num, int listenPort)
 			std::lock_guard<std::mutex> lck (logMutex);
 			std::cout << "[" << __FUNCTION__ << "]:" << "Recieved string " << str_dbg_inp << " from log socket" << std::endl;
 		}
+		str_dbg_inp[6]=0;
 
 		if ( memcmp("0x", str_dbg_inp, 2) )
 		{
